@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Mock Cukewrapper
 module CukewrapperRapidAPI
-  VERSION = '0.1.0'
+  SESSION = { token: '' }.freeze
 end

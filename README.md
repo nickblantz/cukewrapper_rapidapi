@@ -1,28 +1,48 @@
-# CukewrapperRapidapi
+# CukewrapperInlineJsonpath
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cukewrapper_rapidapi`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This plugin allows you to execute RapidAPI tests
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'cukewrapper_rapidapi'
+gem 'cukewrapper'
+
+group :cukewrapper_plugins do
+  gem 'cukewrapper_rapidapi'
+  # ...
+end
 ```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install cukewrapper_rapidapi
 
 ## Usage
 
-TODO: Write usage instructions here
+### Feature File
+
+Add the `@ten.rapid.tid` tag to your scenario
+
+```gherkin
+@ten.rapid.tid=113fba21-f125-4327-13ge-77c0af834b76
+Scenario: My scenario
+    Given ...
+```
+
+### Configuration File
+
+You can provide the following below in `cukewrapper.yml`
+
+```yaml
+rapidapi:
+  context: '5794177'
+  location: AWS-US-EAST-1
+  environment: environment_1fbb1adc-9e95-4a97-92c5-62558386b361
+```
+
+### Environment Variables
+
+- `RAPIDAPI_ENV`: Overrides the environment in `cukewrapper.yml`
+- `RAPIDAPI_USERNAME`: Sets the username for authenticating to RapidAPI tests
+- `RAPIDAPI_PASSWORD`: Sets the password for authenticating to RapidAPI tests
 
 ## Development
 
@@ -32,7 +52,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cukewrapper_rapidapi. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/cukewrapper_rapidapi/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/nickblantz/cukewrapper_rapidapi. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/nickblantz/cukewrapper_rapidapi/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -40,4 +60,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the CukewrapperRapidapi project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/cukewrapper_rapidapi/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the CukewrapperRapidAPI project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/nickblantz/cukewrapper_rapidapi/blob/master/CODE_OF_CONDUCT.md).

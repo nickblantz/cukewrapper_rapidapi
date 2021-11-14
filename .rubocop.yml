@@ -1,13 +1,18 @@
 AllCops:
-  TargetRubyVersion: 2.4
+  NewCops: enable
+  TargetRubyVersion: 2.6
 
-Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: double_quotes
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+Layout/EndOfLine:
+  Enabled: false
+  EnforcedStyle: lf
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
 
-Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
-
-Layout/LineLength:
-  Max: 120
+Metrics/MethodLength:
+  Max: 12
+Metrics/BlockLength:
+  IgnoredMethods: ['describe', 'context']
