@@ -33,9 +33,9 @@ You can provide the following below in `cukewrapper.yml`
 
 ```yaml
 rapidapi:
-  context: '5794177'
+  context: '0000000'
   location: AWS-US-EAST-1
-  environment: environment_1fbb1adc-9e95-4a97-92c5-62558386b361
+  environment: environment_1fbf1adc-9e94-4a45-22c5-625478686b361
 ```
 
 ### Environment Variables
