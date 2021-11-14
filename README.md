@@ -1,4 +1,4 @@
-# CukewrapperInlineJsonpath
+# CukewrapperRapidAPI
 
 This plugin allows you to execute RapidAPI tests
 
