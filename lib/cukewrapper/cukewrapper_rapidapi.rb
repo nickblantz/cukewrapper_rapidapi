@@ -8,7 +8,8 @@ module Cukewrapper
     def run(context)
       return unless @enabled
 
-      test = CukewrapperRapidAPI::RapidAPITest.new @test_id
+      client = CukewrapperRapidAPI::Client.new @config
+      test = CukewrapperRapidAPI::RapidAPITest.new client, @test_id
       LOGGER.debug("#{self.class.name}\##{__method__}") { 'Executing test' }
       @testexecution = test.execute(req_params, req_body(context['data'] || {}))
     end
@@ -39,14 +40,13 @@ module Cukewrapper
       lambda do |_context, _scenario|
         return unless @enabled
 
-        wait_time = 1
+        wait_time = 10
         while (status = check_status) && status['status'] != 'complete'
           LOGGER.debug("#{self.class.name}\##{__method__}") { "Sleeping #{wait_time} seconds" }
           sleep wait_time
-          wait_time *= 2
         end
 
-        raise "Failure when executing test: #{status}" unless status['successful']
+        raise "Failure when executing test: #{@testexecution.details}" unless status['successful']
       end
     end
 

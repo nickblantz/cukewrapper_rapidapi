@@ -3,21 +3,24 @@
 module CukewrapperRapidAPI
   # Wraps the test execution API
   class RapidAPITestExecution
-    include HTTParty
-    base_uri 'https://rapidapi.com/testing/api'
-
-    HEADERS = { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }.freeze
-
-    def initialize(testexecution_id)
+    def initialize(client, test_id, testexecution_id)
+      @client = client
+      @test_id = test_id
       @testexecution_id = testexecution_id
     end
 
     def status
-      options = { headers: HEADERS }
-      response = self.class.get("/trigger/execution/#{@testexecution_id}/status", options)
+      response = @client.get("/trigger/execution/#{@testexecution_id}/status")
       raise "Error checking testexcecution status: #{response.code} | #{response.body}" unless response.code == 200
 
-      JSON.parse(response.body)
+      response.parsed_response
+    end
+
+    def details
+      response = @client.get("/test/#{@test_id}/execution/#{@testexecution_id}?include=environment&include=test/trigger/execution/")
+      raise "Error checking testexcecution dtails: #{response.code} | #{response.body}" unless response.code == 200
+
+      response.parsed_response
     end
   end
 end
