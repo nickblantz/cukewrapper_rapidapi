@@ -18,7 +18,7 @@ module CukewrapperRapidAPI
 
     def details
       response = @client.get("/test/#{@test_id}/execution/#{@testexecution_id}?include=environment&include=test/trigger/execution/")
-      raise "Error checking testexcecution dtails: #{response.code} | #{response.body}" unless response.code == 200
+      raise "Error checking testexcecution details: #{response.code} | #{response.body}" unless response.code == 200
 
       response.parsed_response
     end

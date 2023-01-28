@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Internals for executing RapidAPI tests
+# https://rapidapi.com/testing/api/docs/
 module CukewrapperRapidAPI
   require 'json'
   require 'httparty'

@@ -42,7 +42,7 @@ module Cukewrapper
 
         wait_time = 10
         while (status = check_status) && status['status'] != 'complete'
-          LOGGER.debug("#{self.class.name}\##{__method__}") { "Sleeping #{wait_time} seconds" }
+          LOGGER.debug("#{self.class.name}\##{__method__}") { "Current status is #{status['status']}, sleeping #{wait_time} seconds" }
           sleep wait_time
         end
 
