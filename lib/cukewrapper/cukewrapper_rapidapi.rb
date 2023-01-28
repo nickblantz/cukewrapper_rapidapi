@@ -69,9 +69,9 @@ module Cukewrapper
     def base_context(payload)
       payload.transform_values do |value|
         case value
-        when Hash || Array
+        when Hash, Array
           value.to_json
-        when Integer || Float || TrueClass || FalseClass || String
+        when Integer, Float, TrueClass, FalseClass, String
           value
         when NilClass
           'null'

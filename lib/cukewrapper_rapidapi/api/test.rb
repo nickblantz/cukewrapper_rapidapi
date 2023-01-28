@@ -5,10 +5,7 @@ module CukewrapperRapidAPI
   class RapidAPITest
     def initialize(client, test_id)
       @client = client
-      options = 
-      response = @client.get "/test/#{test_id}", {
-        query: { 'test' => test_id }
-      }
+      response = @client.get "/test/#{test_id}"
       raise "Error getting test: #{response.code} | #{response.body}" unless response.code == 200
       
       @internal = response.parsed_response
