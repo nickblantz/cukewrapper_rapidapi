@@ -11,7 +11,8 @@ module Cukewrapper
       client = CukewrapperRapidAPI::Client.new @config
       test = CukewrapperRapidAPI::RapidAPITest.new client, @test_id
       LOGGER.debug("#{self.class.name}\##{__method__}") { 'Executing test' }
-      @testexecution, @report_url = test.execute(req_params, req_body(context['data'] || {}))
+      @testexecution, report_url = test.execute(req_params, req_body(context['data'] || {}))
+      puts("Full Report: #{report_url}")
     end
 
     def register_hooks
@@ -48,12 +49,11 @@ module Cukewrapper
         
         unless status['successful']
           report = JSON.parse(@testexecution.details['report'])[0]
-
+          variable_overrides = @testexecution.details['variableOverrides']
+          
           puts("Summary: #{report['shortSummary']}")
-          puts("Full Report: #{@report_url}")
-
-          unless @testexecution.details['variableOverrides'].nil?
-            puts("Variable Overrides: #{JSON.pretty_generate(@testexecution.details['variableOverrides'])}")
+          unless variable_overrides.nil?
+            puts("Variable Overrides: #{JSON.pretty_generate(variable_overrides)}")
           end
 
           raise "Failure when executing test"
