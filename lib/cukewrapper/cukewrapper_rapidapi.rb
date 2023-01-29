@@ -51,6 +51,11 @@ module Cukewrapper
 
           puts("Summary: #{report['shortSummary']}")
           puts("Full Report: #{@report_url}")
+
+          unless @testexecution.details['variableOverrides'].nil?
+            puts("Variable Overrides: #{JSON.pretty_generate(@testexecution.details['variableOverrides'])}")
+          end
+
           raise "Failure when executing test"
         end
       end
