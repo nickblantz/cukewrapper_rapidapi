@@ -19,7 +19,7 @@ module CukewrapperRapidAPI
 
       raise "Error executing test: #{response.code} | #{response.body}" unless response.code == 201
 
-      RapidAPITestExecution.new(@client, @internal['id'], response.parsed_response['executionId'])
+      [RapidAPITestExecution.new(@client, @internal['id'], response.parsed_response['executionId']), response.parsed_response['reportUrl']]
     end
   end
 end

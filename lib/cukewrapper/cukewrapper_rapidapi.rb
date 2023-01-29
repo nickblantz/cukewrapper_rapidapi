@@ -11,7 +11,7 @@ module Cukewrapper
       client = CukewrapperRapidAPI::Client.new @config
       test = CukewrapperRapidAPI::RapidAPITest.new client, @test_id
       LOGGER.debug("#{self.class.name}\##{__method__}") { 'Executing test' }
-      @testexecution = test.execute(req_params, req_body(context['data'] || {}))
+      @testexecution, @report_url = test.execute(req_params, req_body(context['data'] || {}))
     end
 
     def register_hooks
@@ -45,8 +45,14 @@ module Cukewrapper
           LOGGER.debug("#{self.class.name}\##{__method__}") { "Current status is #{status['status']}, sleeping #{wait_time} seconds" }
           sleep wait_time
         end
+        
+        unless status['successful']
+          report = JSON.parse(@testexecution.details['report'])[0]
 
-        raise "Failure when executing test: #{@testexecution.details}" unless status['successful']
+          puts("Summary: #{report['shortSummary']}")
+          puts("Full Report: #{@report_url}")
+          raise "Failure when executing test"
+        end
       end
     end
 
