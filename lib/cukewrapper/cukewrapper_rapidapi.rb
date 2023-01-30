@@ -42,10 +42,12 @@ module Cukewrapper
         return unless @enabled
 
         wait_time = 10
-        while (status = check_status) && status['status'] != 'complete'
+        while (status = check_status) && status['status'] != 'complete' && status['status'] != 'failed to start'
           LOGGER.debug("#{self.class.name}\##{__method__}") { "Current status is #{status['status']}, sleeping #{wait_time} seconds" }
           sleep wait_time
         end
+
+        raise "Test unable to start" if status['status'] == 'failed to start'
         
         unless status['successful']
           report = JSON.parse(@testexecution.details['report'])[0]
