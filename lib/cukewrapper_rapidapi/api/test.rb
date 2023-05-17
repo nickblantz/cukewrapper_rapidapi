@@ -7,7 +7,7 @@ module CukewrapperRapidAPI
       @client = client
       response = @client.get "/test/#{test_id}"
       raise "Error getting test: #{response.code} | #{response.body}" unless response.code == 200
-      
+
       @internal = response.parsed_response
     end
 
@@ -19,7 +19,10 @@ module CukewrapperRapidAPI
 
       raise "Error executing test: #{response.code} | #{response.body}" unless response.code == 201
 
-      [RapidAPITestExecution.new(@client, @internal['id'], response.parsed_response['executionId']), response.parsed_response['reportUrl']]
+      [
+        RapidAPITestExecution.new(@client, @internal['id'], response.parsed_response['executionId']),
+        response.parsed_response['reportUrl']
+      ]
     end
   end
 end

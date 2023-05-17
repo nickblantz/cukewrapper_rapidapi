@@ -10,7 +10,7 @@ module Cukewrapper
 
       client = CukewrapperRapidAPI::Client.new @config
       test = CukewrapperRapidAPI::RapidAPITest.new client, @test_id
-      LOGGER.debug("#{self.class.name}\##{__method__}") { 'Executing test' }
+      LOGGER.debug("#{self.class.name}##{__method__}") { 'Executing test' }
       @testexecution, report_url = test.execute(req_params, req_body(context['data'] || {}))
       Cukewrapper::Runtime.world.log("Full Report: #{report_url}")
     end
@@ -28,12 +28,12 @@ module Cukewrapper
         @metatags = metatags['rapid'] || {}
         @test_id = "test_#{@metatags['tid']}"
         @enabled = !@metatags['tid'].nil?
-        LOGGER.debug("#{self.class.name}\##{__method__}") { @enabled }
+        LOGGER.debug("#{self.class.name}##{__method__}") { @enabled }
       end
     end
 
     def check_status
-      LOGGER.debug("#{self.class.name}\##{__method__}") { 'Checking status' }
+      LOGGER.debug("#{self.class.name}##{__method__}") { 'Checking status' }
       @testexecution.status
     end
 
@@ -43,32 +43,32 @@ module Cukewrapper
 
         wait_time = 10
         while (status = check_status) && status['status'] != 'complete' && status['status'] != 'failed to start'
-          LOGGER.debug("#{self.class.name}\##{__method__}") { "Current status is #{status['status']}, sleeping #{wait_time} seconds" }
+          LOGGER.debug("#{self.class.name}##{__method__}") do
+            "Current status is #{status['status']}, sleeping #{wait_time} seconds"
+          end
           sleep wait_time
         end
 
-        raise "Test unable to start" if status['status'] == 'failed to start'
-        
-        unless status['successful']
-          report = JSON.parse(@testexecution.details['report'])[0]
-          variable_overrides = @testexecution.details['variableOverrides']
-          
-          Cukewrapper::Runtime.world.log("Summary: #{report['shortSummary']}")
-          unless variable_overrides.nil?
-            Cukewrapper::Runtime.world.log("Variable Overrides: #{JSON.pretty_generate(variable_overrides)}")
-          end
+        raise 'Test unable to start' if status['status'] == 'failed to start'
 
-          raise "Failure when executing test"
-        end
+        report_failure unless status['successful']
       end
     end
 
-    def environment
-      ENV['RAPIDAPI_ENV'] || @config['environment'] || nil
+    def report_failure
+      report = JSON.parse(@testexecution.details['report'])[0]
+      variable_overrides = @testexecution.details['variableOverrides']
+
+      Cukewrapper::Runtime.world.log("Summary: #{report['shortSummary']}")
+      unless variable_overrides.nil?
+        Cukewrapper::Runtime.world.log("Variable Overrides: #{JSON.pretty_generate(variable_overrides)}")
+      end
+
+      raise 'Failure when executing test'
     end
 
     def req_params
-      { 'source' => 'trigger', 'environment' => environment }
+      { 'source' => 'trigger', 'environment' => @config['environment'] }
         .compact
         .merge(@config.slice('context', 'location'))
     end
@@ -77,8 +77,6 @@ module Cukewrapper
       { 'baseContext' => base_context(payload) }
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
     def base_context(payload)
       payload.transform_values do |value|
         case value
@@ -93,7 +91,5 @@ module Cukewrapper
         end
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
   end
 end

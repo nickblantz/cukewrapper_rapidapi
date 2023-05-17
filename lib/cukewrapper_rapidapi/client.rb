@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 module CukewrapperRapidAPI
+  # Handles communication between Cukewrapper and RapidAPI
   class Client
     include HTTParty
     format :json
 
     def initialize(config)
       self.class.base_uri(config.fetch('base_uri', default_config['base_uri']))
-      @auth_token = get_auth_token
+      @auth_token = get_auth_token(config)
     end
 
     def get(path, options = {})
@@ -22,12 +23,12 @@ module CukewrapperRapidAPI
 
     private
 
-    def get_auth_token
+    def get_auth_token(config)
       response = post '/token', {
-        body: auth_config.to_json,
+        body: { 'username' => config['username'], 'password' => config['password'] }.to_json,
         headers: {
           'Accept' => 'text/plain',
-          'Content-Type' => 'application/json',
+          'Content-Type' => 'application/json'
         }
       }
 
@@ -38,7 +39,7 @@ module CukewrapperRapidAPI
 
     def default_config
       {
-        'base_uri' => 'https://rapidapi.com/testing/api',
+        'base_uri' => 'https://rapidapi.com/testing/api'
       }.freeze
     end
 
@@ -47,19 +48,13 @@ module CukewrapperRapidAPI
         headers: {
           'Accept' => 'application/json',
           'Content-Type' => 'application/json',
-          'Cookie' => auth_cookie,
+          'Cookie' => auth_cookie
         }
       }
     end
 
-    def auth_config
-      username = ENV['RAPIDAPI_USERNAME']
-      password = ENV['RAPIDAPI_PASSWORD']
-      { 'username' => username, 'password' => password }
-    end
-
     def auth_cookie
-      return "" if @auth_token.nil?
+      return '' if @auth_token.nil?
 
       "#{@auth_token['name']}=#{@auth_token['value']}"
     end
